@@ -24,6 +24,45 @@ const createProduct = (newProduct, imgUrls = []) => {
     })
 }
 
+const updateProduct = (productId, data) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const checkProduct = await Product.findById(productId)
+            if (!checkProduct) {
+                return resolve({
+                    status: "Err",
+                    message: 'Sản phẩm không xác định'
+                })
+            }
+            if (data.priceType === 'contact') {
+                data.price = null
+            }
+
+            if (data.priceType === 'fixed') {
+                if (data.price === null || isNaN(data.price)) {
+                    return resolve({
+                        status: "Err",
+                        message: "Phải nhập giá hợp lệ khi priceType là fixed"
+                    })
+                }
+            }
+
+            if (!data.priceType || !['fixed', 'contact'].includes(data.priceType)) {
+                return resolve({ status: "Err", message: "Loại giá không hợp lệ" })
+            }
+
+            const updateProduct = await Product.findByIdAndUpdate(productId, data, { new: true })
+            resolve({
+                status: "Ok",
+                message: "Cập nhật thành công",
+                data: updateProduct
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 const updateProductImage = async (productId, imageUrls) => {
     try {
         await Product.findByIdAndUpdate(productId, { image: imageUrls })
@@ -55,14 +94,24 @@ const deleteProduct = async (productId) => {
     }
 }
 
-const getAllProduct = () => {
+const getAllProduct = (page, limit) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const allProduct = await Product.find()
+            console.log(page, limit)
+            const skip = (page - 1) * limit
+            const [products, total] = await Promise.all([Product.find().skip(skip).limit(limit),
+            Product.countDocuments()
+            ])
+            // const allProduct = await Product.find()
             resolve({
                 status: "Ok",
                 message: "Lấy danh sách sản phẩm thành công",
-                data: allProduct
+                data: products,
+                pagination: {
+                    currentPage: page,
+                    totalPages: Math.ceil(total / limit),
+                    totalItems: total
+                }
             })
         } catch (e) {
             reject(e)
@@ -90,5 +139,6 @@ module.exports = {
     deleteProduct,
     getAllProduct,
     getDetailProduct,
-    updateProductImage
+    updateProductImage,
+    updateProduct
 }

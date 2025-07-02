@@ -38,24 +38,10 @@ const createUser = (newUser) => {
 
 const loginUser = (userLogin) => {
     return new Promise(async (resolve, reject) => {
-        const { account, passWord } = userLogin;
+        const { email, passWord } = userLogin;
         try {
-            const reg = /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/;
-            const isCheckEmail = reg.test(account)
-            let user;
-            if (isCheckEmail) {
-                user = await User.findOne({ email: account })
-            } else {
-                user = await User.findOne({ phone: account })
-            }
-            if (!user) {
-                return resolve({
-                    status: "Err",
-                    message: "Tài khoản không tồn tại"
-                })
-            }
-
-            const comparePass = bcrypt.compareSync(passWord, user.passWord)
+            const checkUser = await User.findOne({ email })
+            const comparePass = bcrypt.compareSync(passWord, checkUser.passWord)
             if (!comparePass) {
                 return resolve({
                     status: "Err",
@@ -64,12 +50,12 @@ const loginUser = (userLogin) => {
             }
 
             const access_token = await genneralAccessToken({
-                id: user.id,
-                role: user.role
+                id: checkUser.id,
+                role: checkUser.role
             })
             const refresh_token = await genneralRefreshToken({
-                id: user.id,
-                role: user.role
+                id: checkUser.id,
+                role: checkUser.role
             })
             console.log("refresh_token: ", refresh_token)
             resolve({

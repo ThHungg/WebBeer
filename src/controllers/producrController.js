@@ -95,63 +95,99 @@ const { uploadMultiBuffers, getPublicIdFromUrl } = require('../utils/cloudinaryU
 //     }
 // }
 
+// const createProduct = async (req, res) => {
+//     try {
+//         const { name, priceType, price, description, category, specifications } = req.body
+//         if (!name || !priceType || !price || !description || !category || !specifications) {
+//             return res.status(400).json({
+//                 status: "Err",
+//                 message: "Vui lòng nhập đầy đủ thông tin"
+//             })
+//         }
+
+//         const productData = {
+//             name,
+//             priceType,
+//             price,
+//             description,
+//             category,
+//             specifications: JSON.parse(specifications),
+//             image: []
+//         }
+
+//         // Bắt đầu upload ảnh (Promise chưa await)
+//         let uploadPromise = Promise.resolve([])
+//         if (req.files && req.files.length > 0) {
+//             const fileBuffers = req.files.map(file => file.buffer)
+//             uploadPromise = uploadMultiBuffers(fileBuffers, 'WebBeerImg/products')
+//         }
+
+//         // Tạo sản phẩm (await)
+//         const response = await productService.createProduct(productData)
+
+//         // Trả kết quả tạo sản phẩm ngay, dù lỗi hay thành công
+//         res.status(response.status === 'Ok' ? 200 : 400).json(response)
+
+//         // Xử lý upload ảnh & cập nhật hoặc xóa ảnh dựa vào response.status
+//         uploadPromise.then(async (imgUrls) => {
+//             if (response.status !== 'Ok') {
+//                 // Nếu tạo sản phẩm lỗi, xóa ảnh đã upload
+//                 await Promise.all(
+//                     imgUrls.map(url => cloudinary.uploader.destroy(getPublicIdFromUrl(url)))
+//                 )
+//             } else if (imgUrls.length > 0 && response?.data?._id) {
+//                 // Nếu tạo sản phẩm thành công, cập nhật ảnh cho sản phẩm
+//                 await productService.updateProductImage(response.data._id, imgUrls)
+//             }
+//         }).catch(e => {
+//             console.error('Lỗi upload ảnh hoặc xử lý ảnh:', e)
+//         })
+
+//     } catch (e) {
+//         console.error(e)
+//         res.status(500).json({
+//             message: "Lỗi hệ thống, vui lòng thử lại sau!"
+//         })
+//     }
+// }
+
 const createProduct = async (req, res) => {
     try {
-        const { name, priceType, price, description, category, specifications } = req.body
-        if (!name || !priceType || !price || !description || !category || !specifications) {
+        const { name, priceType, price, description, image, category, specifications } = req.body
+        if (!name || !priceType || !price || !description || !image || !category || !specifications) {
             return res.status(400).json({
                 status: "Err",
                 message: "Vui lòng nhập đầy đủ thông tin"
             })
         }
-
-        const productData = {
-            name,
-            priceType,
-            price,
-            description,
-            category,
-            specifications: JSON.parse(specifications),
-            image: []
-        }
-
-        // Bắt đầu upload ảnh (Promise chưa await)
-        let uploadPromise = Promise.resolve([])
-        if (req.files && req.files.length > 0) {
-            const fileBuffers = req.files.map(file => file.buffer)
-            uploadPromise = uploadMultiBuffers(fileBuffers, 'WebBeerImg/products')
-        }
-
-        // Tạo sản phẩm (await)
-        const response = await productService.createProduct(productData)
-
-        // Trả kết quả tạo sản phẩm ngay, dù lỗi hay thành công
-        res.status(response.status === 'Ok' ? 200 : 400).json(response)
-
-        // Xử lý upload ảnh & cập nhật hoặc xóa ảnh dựa vào response.status
-        uploadPromise.then(async (imgUrls) => {
-            if (response.status !== 'Ok') {
-                // Nếu tạo sản phẩm lỗi, xóa ảnh đã upload
-                await Promise.all(
-                    imgUrls.map(url => cloudinary.uploader.destroy(getPublicIdFromUrl(url)))
-                )
-            } else if (imgUrls.length > 0 && response?.data?._id) {
-                // Nếu tạo sản phẩm thành công, cập nhật ảnh cho sản phẩm
-                await productService.updateProductImage(response.data._id, imgUrls)
-            }
-        }).catch(e => {
-            console.error('Lỗi upload ảnh hoặc xử lý ảnh:', e)
-        })
-
+        const response = await productService.createProduct(req.body)
+        return res.status(200).json(response)
     } catch (e) {
-        console.error(e)
-        res.status(500).json({
-            message: "Lỗi hệ thống, vui lòng thử lại sau!"
+        res.status(404).json({
+            message: "Lỗi hệ thống vui lòng thử lại sau!"
         })
     }
 }
 
-
+const updateProduct = async (req, res) => {
+    try {
+        const productId = req.params.id
+        const data = req.body
+        if (!productId) {
+            return res.status(400).json({
+                status: "Err",
+                message: "Sản phẩm không tồn tại"
+            })
+        }
+        const response = await productService.updateProduct(productId, data)
+        return res.status(200).json(response)
+    } catch (e) {
+        console.log(e)
+        res.status(404).json({
+            message: "Lỗi hệ thống vui lòng thử lại sau!"
+        })
+    }
+}
 
 
 const deleteProduct = async (req, res) => {
@@ -175,7 +211,9 @@ const deleteProduct = async (req, res) => {
 
 const getAllProduct = async (req, res) => {
     try {
-        const response = await productService.getAllProduct()
+        const limit = parseInt(req.query.limit) || 0;
+        const page = parseInt(req.query.page) || 0;
+        const response = await productService.getAllProduct(page, limit)
         return res.status(200).json(response)
     } catch (e) {
         res.status(404).json({
@@ -207,7 +245,8 @@ module.exports = {
     createProduct,
     deleteProduct,
     getAllProduct,
-    getDetailProduct
+    getDetailProduct,
+    updateProduct
 }
 
 

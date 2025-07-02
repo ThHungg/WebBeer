@@ -4,11 +4,20 @@ const routes = require('./routes')
 const cookieParser = require('cookie-parser')
 const { default: mongoose } = require('mongoose')
 const bodyParser = require('body-parser')
+const cors = require('cors')
 
 dotenv.config()
 
 const app = express()
 const port = process.env.PORT || 3000
+
+// app.use(cors())
+app.use(
+    cors({
+        origin: 'http://localhost:5173', // FE domain
+        credentials: true
+    })
+);
 
 app.use(bodyParser.json())
 app.use(cookieParser());

@@ -52,9 +52,9 @@ const createUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
     try {
-        const { account, passWord } = req.body
+        const { email, passWord } = req.body
 
-        if (!account || !passWord) {
+        if (!email || !passWord) {
             return res.status(400).json({
                 status: "Err",
                 message: "Vui lòng nhập đầy đủ thông tin"
@@ -65,10 +65,11 @@ const loginUser = async (req, res) => {
         res.cookie('refresh_token', refresh_token, {
             httpOnly: true,
             secure: false,
-            samesite: 'strict'
+            samesite: 'none',
         })
         return res.status(200).json(newResponse)
     } catch (e) {
+        console.log(e)
         return res.status(404).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
         })
