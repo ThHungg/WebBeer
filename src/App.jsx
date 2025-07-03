@@ -35,15 +35,15 @@ function App() {
     }
   );
 
-  const handleGetDetailsUser = async (id, token) => {
-    const res = await userServices.getDetailUser(id, token);
-    dispatch(updateUser({ ...res?.data, access_token: token }));
+  const handleGetDetailsUser = async (id) => {
+    const res = await userServices.getDetailUser(id);
+    dispatch(updateUser({ ...res?.data }));
   };
 
   useEffect(() => {
-    const { storageData, decoded } = handleDecoded();
+    const { decoded } = handleDecoded();
     if (decoded?.id) {
-      handleGetDetailsUser(decoded?.id, storageData);
+      handleGetDetailsUser(decoded?.id);
     }
   }, []);
   return (
