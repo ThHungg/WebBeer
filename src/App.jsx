@@ -1,13 +1,12 @@
 import "./App.css";
+import { BrowserRouter } from "react-router-dom";
+import RouterCustom from "./router";
 
 function App() {
   return (
-    <>
-      <div className="text-brandOrange font-custom">
-        Custom Tailwind styles!
-      </div>
-      <div className="font-bold">Custom Tailwind styles!</div>
-    </>
+    <BrowserRouter>
+      <RouterCustom />
+    </BrowserRouter>
   );
 }
 
