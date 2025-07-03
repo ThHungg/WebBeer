@@ -15,6 +15,16 @@ const createAbout = async (req, res) => {
     }
 }
 
+const getAbout = async (req, res) => {
+    try {
+        const response = await aboutService.getAbout()
+        return res.status(200).json(response)
+    } catch (e) {
+
+    }
+}
+
 module.exports = {
-    createAbout
+    createAbout,
+    getAbout
 }

@@ -4,13 +4,13 @@ const productController = require('../controllers/producrController')
 const { authMiddleware, roleMiddleware } = require('../middleware/authMiddleware')
 const upload = require('../middleware/upload')
 
-router.post('/createProduct', upload.array('image', 5), productController.createProduct)
+router.post('/createProduct', upload.array('image', 5), authMiddleware, roleMiddleware(['admin']), productController.createProduct)
 
-router.get('/getAllProduct', productController.getAllProduct)
+router.get('/getAllProduct', authMiddleware, roleMiddleware(['admin']), productController.getAllProduct)
 router.get('/getDetailProduct/:id', productController.getDetailProduct)
 
-router.put('/updateProduct/:id', productController.updateProduct)
+router.put('/updateProduct/:id', authMiddleware, roleMiddleware(['admin']), productController.updateProduct)
 
-router.delete('/deleteProduct/:id', productController.deleteProduct)
+router.delete('/deleteProduct/:id', authMiddleware, roleMiddleware(['admin']), productController.deleteProduct)
 
 module.exports = router

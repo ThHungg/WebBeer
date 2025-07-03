@@ -29,7 +29,22 @@ const createAbout = (data) => {
         }
     })
 }
+const getAbout = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const about = await About.find()
+            resolve({
+                status: "Ok",
+                message: "Lấy thông tin about thành công",
+                data: about
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 
 module.exports = {
-    createAbout
+    createAbout,
+    getAbout
 }

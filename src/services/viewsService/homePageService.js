@@ -29,6 +29,22 @@ const createDataHP = (data) => {
     });
 };
 
+
+const getHome = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const home = await HomePage.find()
+            resolve({
+                status: "Ok",
+                message: "Lấy thông tin about thành công",
+                data: home
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
 module.exports = {
-    createDataHP
+    createDataHP,
+    getHome
 };

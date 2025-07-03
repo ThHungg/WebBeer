@@ -29,6 +29,22 @@ const createNavigate = (data) => {
     })
 }
 
+const getNavigate = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const navi = await Navigate.find()
+            resolve({
+                status: "Ok",
+                message: "Lấy thông tin about thành công",
+                data: navi
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
+}
+
 module.exports = {
-    createNavigate
+    createNavigate,
+    getNavigate
 }

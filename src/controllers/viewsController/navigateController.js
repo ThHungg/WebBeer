@@ -15,6 +15,17 @@ const createNavigate = async (req, res) => {
     }
 }
 
+const getNavigate = async (req, res) => {
+    try {
+        const response = await navigateService.getNavigate()
+        return res.status(200).json(response)
+    } catch (e) {
+        res.status(500).json({ status: "Err", message: "Lỗi hệ thống" });
+    }
+}
+
+
 module.exports = {
-    createNavigate
+    createNavigate,
+    getNavigate
 }

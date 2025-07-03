@@ -33,11 +33,20 @@ const createDataHP = async (req, res) => {
 
         res.status(200).json(response);
     } catch (e) {
-        console.error('Lỗi hệ thống createDataHP:', e);
         res.status(500).json({ status: "Err", message: "Lỗi hệ thống" });
     }
 };
 
+const getHome = async (req, res) => {
+    try {
+        const response = await homePageService.getHome()
+        return res.status(200).json(response)
+    } catch (e) {
+        res.status(500).json({ status: "Err", message: "Lỗi hệ thống" });
+    }
+}
+
 module.exports = {
-    createDataHP
+    createDataHP,
+    getHome
 };
