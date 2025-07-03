@@ -4,6 +4,7 @@ import { Routes, Route } from "react-router-dom";
 import { ROUTERS } from "./utils/router";
 import LoginPage from "./page/user/loginPage";
 import loadable from "@loadable/component";
+import ProductPage from "./page/user/productPage";
 
 const HomePage = loadable(() => import("./page/user/homePage"), {
   fallback: <div>Đang tải trang...</div>,
@@ -18,6 +19,10 @@ const renderUserRouter = () => {
     {
       path: ROUTERS.USER.LOGINPAGE,
       component: <LoginPage />,
+    },
+    {
+      path: ROUTERS.USER.PRODUCTPAGE,
+      component: <ProductPage />,
     },
   ];
   return (

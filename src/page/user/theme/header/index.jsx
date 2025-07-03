@@ -3,12 +3,13 @@ import { Link } from "react-router-dom";
 import { ROUTERS } from "../../../../utils/router";
 import { Icon } from "@iconify/react/dist/iconify.js";
 
-const Header = () => {
+const Header = ({ isCartOpen, setIsCartOpen }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <>
-      <div className="sm:px-10 md:px-16 lg:px-16 xl:px-18 pt-3 bg-white pb-5">
+      {/* HEADER */}
+      <div className="sm:px-10 md:px-16 lg:px-16 xl:px-18 pt-3 bg-white">
         <div className="relative flex justify-center lg:justify-between items-center">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -22,7 +23,10 @@ const Header = () => {
             className="w-[180px] h-[80px]"
           />
           <div className="absolute right-0 flex items-center gap-3 lg:hidden">
-            <button className="text-2xl text-black">
+            <button
+              className="text-2xl text-black"
+              onClick={() => setIsCartOpen(true)}
+            >
               <Icon icon="mdi:cart" className="text-[#302006] text-3xl" />
             </button>
             <Link to={ROUTERS.USER.LOGINPAGE}>
@@ -36,7 +40,7 @@ const Header = () => {
               <a href="/">Trang chủ</a>
             </li>
             <li>
-              <a href="">Sản phẩm</a>
+              <a href="/product">Sản phẩm</a>
             </li>
             <li>
               <a href="">News &amp; Events</a>
@@ -48,7 +52,10 @@ const Header = () => {
               <a href="">About</a>
             </li>
             <div className="flex gap-2">
-              <button className="px-[16px] py-[10px] bg-[#302006] text-white">
+              <button
+                className="px-[16px] py-[10px] bg-[#302006] text-white"
+                onClick={() => setIsCartOpen(true)}
+              >
                 Cart
               </button>
               <Link to={ROUTERS.USER.LOGINPAGE}>
@@ -60,7 +67,7 @@ const Header = () => {
           </ul>
         </div>
 
-        {/* Luôn render menu, ẩn hiện bằng class */}
+        {/* Menu mobile */}
         <div
           className={`fixed inset-0 z-50 p-6 lg:hidden
             bg-[rgba(64,42,24,0.9)] backdrop-blur-sm
