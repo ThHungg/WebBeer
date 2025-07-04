@@ -6,6 +6,11 @@ import LoginPage from "./page/user/loginPage";
 import loadable from "@loadable/component";
 import ProductPage from "./page/user/productPage";
 import DetailProduct from "./page/user/detailProduct";
+import AboutPage from "./page/user/aboutPage";
+import ContactPage from "./page/user/contactPage";
+import NewPage from "./page/user/newPage";
+import CartPage from "./page/user/cartPage";
+import ProfilePage from "./page/user/profilePage";
 
 const HomePage = loadable(() => import("./page/user/homePage"), {
   fallback: <div>Đang tải trang...</div>,
@@ -28,6 +33,26 @@ const renderUserRouter = () => {
     {
       path: `${ROUTERS.USER.DETAILPRODUCT}/:id`,
       component: <DetailProduct />,
+    },
+    {
+      path: `${ROUTERS.USER.ABOUTPAGE}`,
+      component: <AboutPage />,
+    },
+    {
+      path: `${ROUTERS.USER.CONTACTPAGE}`,
+      component: <ContactPage />,
+    },
+    {
+      path: `${ROUTERS.USER.NEWS}`,
+      component: <NewPage />,
+    },
+    {
+      path: `${ROUTERS.USER.CART}`,
+      component: <CartPage />,
+    },
+    {
+      path: `${ROUTERS.USER.PROFILE}`,
+      component: <ProfilePage />,
     },
   ];
   return (

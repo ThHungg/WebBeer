@@ -2,7 +2,9 @@ import { memo, useEffect, useState, useRef } from "react";
 import Footer from "../footer";
 import Header from "../header";
 import { Icon } from "@iconify/react";
-import '../../../../assets/styte/front.css'
+import "../../../../assets/styte/front.css";
+import { Link } from "react-router-dom";
+import { ROUTERS } from "../../../../utils/router";
 
 const MasterLayout = ({ children, ...props }) => {
   const [showHeader, setShowHeader] = useState(true);
@@ -64,6 +66,9 @@ const MasterLayout = ({ children, ...props }) => {
             </div>
             <div className="flex-1 overflow-y-auto">
               <p className="text-sm">Không có sản phẩm nào trong giỏ.</p>
+              <Link to={ROUTERS.USER.CART}>
+                <p>View Cart</p>
+              </Link>
             </div>
           </div>
         </div>

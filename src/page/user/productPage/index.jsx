@@ -1,5 +1,5 @@
 import { memo, useRef } from "react";
-import ProductCart from "../../../component/ProductCart";
+import ProductCart from "../../../component/ProductCard";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination, Navigation } from "swiper/modules";
 import * as productService from "../../../services/productService";
@@ -48,7 +48,6 @@ const ProductPage = () => {
           wine!
         </p>
       </div>
-
       <div className="px-10">
         <Swiper
           modules={[Autoplay]}
@@ -70,13 +69,12 @@ const ProductPage = () => {
         >
           {productss?.map((item, index) => (
             <SwiperSlide key={index}>
-              <Link to={`${ROUTERS.USER.DETAILPRODUCT}/${item._id}`}>
-                <ProductCart
-                  name={item.name}
-                  price={item.price}
-                  image={item.image[0]}
-                />
-              </Link>
+              <ProductCart
+                id={item._id}
+                name={item.name}
+                price={item.price}
+                image={item.image[0]}
+              />
             </SwiperSlide>
           ))}
         </Swiper>

@@ -4,7 +4,7 @@ import { Icon } from "@iconify/react";
 import { useDispatch } from "react-redux";
 import { useMutationHooks } from "../../hooks/useMutation";
 import * as userServices from "../../services/userService";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { updateUser } from "../../redux/slices/userSlice";
 import { useNavigate } from "react-router-dom";
 import { jwtDecode } from "jwt-decode";
@@ -126,6 +126,7 @@ const LoginForm = () => {
         </button>
         <p className="underline text-base">Bạn quên mật khẩu?</p>
       </div>
+      <ToastContainer position="top-right" autoClose={3000} />
     </div>
   );
 };
