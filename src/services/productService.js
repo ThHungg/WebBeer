@@ -119,6 +119,10 @@ const getAllProduct = (page, limit) => {
     })
 }
 
+const getRandomProduct = () => {
+    
+}
+
 const getDetailProduct = (productId) => {
     return new Promise(async (resolve, reject) => {
         try {

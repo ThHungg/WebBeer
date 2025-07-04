@@ -222,6 +222,17 @@ const getAllProduct = async (req, res) => {
     }
 }
 
+const getRandomProduct = async (req, res) => {
+    try {
+        const response = await productService.getRandomProduct()
+        return res.status(200).json(response)
+    } catch (e) {
+        res.status(404).json({
+            message: "Lỗi hệ thống vui lòng thử lại sau!"
+        })
+    }
+}
+
 const getDetailProduct = async (req, res) => {
     try {
         const productId = req.params.id

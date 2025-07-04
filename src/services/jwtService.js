@@ -5,7 +5,7 @@ dotenv.config()
 const genneralAccessToken = (payload) => {
     const access_token = jwt.sign({
         ...payload
-    }, process.env.ACCESS_TOKEN, { expiresIn: '10s' })
+    }, process.env.ACCESS_TOKEN, { expiresIn: '15m' })
     return access_token
 }
 
@@ -45,13 +45,36 @@ const genneralRefreshToken = (payload) => {
 // }
 
 
+// const refreshTokenJwtService = async (token) => {
+//     try {
+//         const user = await jwtVerify(token, process.env.REFRESH_TOKEN);
+//         const access_token = await genneralAccessToken({
+//             id: user?.id,
+//             role: user?.role
+//         });
+//         return {
+//             status: "Ok",
+//             message: "Thành công",
+//             access_token
+//         };
+//     } catch (err) {
+//         return {
+//             status: "Err",
+//             message: "Xác thực không thành công"
+//         };
+//     }
+// };
+
 const refreshTokenJwtService = async (token) => {
     try {
-        const user = await jwtVerify(token, process.env.REFRESH_TOKEN);
-        const access_token = await genneralAccessToken({
-            id: user?.id,
-            role: user?.role
-        });
+        console.log(token)
+        const decoded = jwt.verify(token, process.env.REFRESH_TOKEN);
+        const access_token = jwt.sign(
+            { id: decoded.id, role: decoded.role },
+            process.env.ACCESS_TOKEN,
+            { expiresIn: '15m' }
+        );
+
         return {
             status: "Ok",
             message: "Thành công",
@@ -60,7 +83,7 @@ const refreshTokenJwtService = async (token) => {
     } catch (err) {
         return {
             status: "Err",
-            message: "Xác thực không thành công"
+            message: "Token không hợp lệ"
         };
     }
 };
