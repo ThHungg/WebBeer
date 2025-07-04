@@ -5,6 +5,7 @@ import { ROUTERS } from "./utils/router";
 import LoginPage from "./page/user/loginPage";
 import loadable from "@loadable/component";
 import ProductPage from "./page/user/productPage";
+import DetailProduct from "./page/user/detailProduct";
 
 const HomePage = loadable(() => import("./page/user/homePage"), {
   fallback: <div>Đang tải trang...</div>,
@@ -23,6 +24,10 @@ const renderUserRouter = () => {
     {
       path: ROUTERS.USER.PRODUCTPAGE,
       component: <ProductPage />,
+    },
+    {
+      path: `${ROUTERS.USER.DETAILPRODUCT}/:id`,
+      component: <DetailProduct />,
     },
   ];
   return (

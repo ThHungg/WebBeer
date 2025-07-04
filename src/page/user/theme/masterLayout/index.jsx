@@ -2,6 +2,7 @@ import { memo, useEffect, useState, useRef } from "react";
 import Footer from "../footer";
 import Header from "../header";
 import { Icon } from "@iconify/react";
+import '../../../../assets/styte/front.css'
 
 const MasterLayout = ({ children, ...props }) => {
   const [showHeader, setShowHeader] = useState(true);

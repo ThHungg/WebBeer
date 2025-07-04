@@ -70,13 +70,14 @@ const Header = ({ isCartOpen, setIsCartOpen }) => {
         {/* Menu mobile */}
         <div
           className={`fixed inset-0 z-50 p-6 lg:hidden
-            bg-[rgba(64,42,24,0.9)] backdrop-blur-sm
-            transition-transform duration-300 ease-in-out
-            ${
-              isOpen
-                ? "translate-x-0 opacity-100 pointer-events-auto"
-                : "-translate-x-full opacity-0 pointer-events-none"
-            }`}
+    bg-[rgba(64,42,24,0.9)] backdrop-blur-sm
+    transition-transform duration-300 ease-in-out
+    ${
+      isOpen
+        ? "translate-x-0 opacity-100 pointer-events-auto"
+        : "-translate-x-full opacity-0 pointer-events-none"
+    }
+    h-screen`} // ← thêm class này
         >
           <button
             onClick={() => setIsOpen(false)}
