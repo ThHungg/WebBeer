@@ -1,14 +1,14 @@
-const cloudinary = require('../config/cloudinaryConfig')
+// const cloudinary = require('../config/cloudinaryConfig')
 
-const deleteImg = async (imgId) => {
-    try {
-        const response = await cloudinary.uploader.destroy(imgId)
-        return response
-    } catch (e) {
-        return e
-    }
-}
+// const deleteImg = async (imgId) => {
+//     try {
+//         const response = await cloudinary.uploader.destroy(imgId)
+//         return response
+//     } catch (e) {
+//         return e
+//     }
+// }
 
-module.exports = {
-    deleteImg
-}
+// module.exports = {
+//     deleteImg
+// }

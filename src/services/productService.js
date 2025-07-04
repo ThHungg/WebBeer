@@ -1,8 +1,6 @@
 const Product = require('../models/Product')
-const { deleteImg } = require('./cloudinaryService')
-const { getPublicIdFromUrl } = require('../utils/cloudinaryUtils')
 
-const createProduct = (newProduct, imgUrls = []) => {
+const createProduct = (newProduct) => {
     return new Promise(async (resolve, reject) => {
         try {
             const checkProduct = await Product.findOne({ name: newProduct.name })
@@ -78,12 +76,12 @@ const deleteProduct = async (productId) => {
 
         await Product.findByIdAndDelete(productId)
 
-        if (product.image && product.image.length > 0) {
-            product.image.forEach(imageUrl => {
-                const publicId = getPublicIdFromUrl(imageUrl)
-                deleteImg(publicId).catch(console.error)
-            })
-        }
+        // if (product.image && product.image.length > 0) {
+        //     product.image.forEach(imageUrl => {
+        //         const publicId = getPublicIdFromUrl(imageUrl)
+        //         deleteImg(publicId).catch(console.error)
+        //     })
+        // }
 
         return {
             status: "Ok",
@@ -120,7 +118,18 @@ const getAllProduct = (page, limit) => {
 }
 
 const getRandomProduct = () => {
-    
+    return new Promise(async (resolve, reject) => {
+        try {
+            const products = await Product.aggregate([{ $sample: { size: 5 } }])
+            resolve({
+                status: "Ok",
+                message: "Lấy danh sách sản phẩm thành công",
+                data: products
+            })
+        } catch (e) {
+            reject(e)
+        }
+    })
 }
 
 const getDetailProduct = (productId) => {
@@ -144,5 +153,6 @@ module.exports = {
     getAllProduct,
     getDetailProduct,
     updateProductImage,
-    updateProduct
+    updateProduct,
+    getRandomProduct
 }

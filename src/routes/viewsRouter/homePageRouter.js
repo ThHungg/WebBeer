@@ -1,10 +1,22 @@
-const express = require('express')
-const router = express.Router()
-const homePageController = require('../../controllers/viewsController/homepageController')
-const upload = require('../../middleware/upload')
-const { authMiddleware, roleMiddleware } = require('../../middleware/authMiddleware')
+const express = require('express');
+const router = express.Router();
+const upload = require('../../middleware/upload');
+const homePageController = require('../../controllers/viewsController/homepageController');
 
-router.post('/createdataHP', homePageController.createDataHP)
-router.get('/getHome', homePageController.getHome)
+// Multer middleware (chỉnh theo fieldnames bạn dùng)
+router.post('/createHomePage', upload.fields([
+    { name: 'bannerImage', maxCount: 1 },
+    { name: 'sectionImages' },
+    { name: 'carouselImages' }
+]), homePageController.createHomePage);
 
-module.exports = router
+router.put('/updateHomePage', upload.fields([
+    { name: 'bannerImage', maxCount: 1 },
+    { name: 'sectionImages' },
+    { name: 'carouselImages' }
+]), homePageController.updateHomePage);
+
+router.delete('/deleteHomePage', homePageController.deleteHomePage);
+router.get('/getHomePage', homePageController.getHomePage);
+
+module.exports = router;

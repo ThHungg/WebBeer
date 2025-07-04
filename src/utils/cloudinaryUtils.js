@@ -1,19 +1,19 @@
-const cloudinary = require('../config/cloudinaryConfig')
+// const cloudinary = require('../config/cloudinaryConfig')
 
-function getPublicIdFromUrl(url) {
-    const parts = url.split('/upload/')
-    if (parts.length < 2) return null
+// function getPublicIdFromUrl(url) {
+//     const parts = url.split('/upload/')
+//     if (parts.length < 2) return null
 
-    const fullPath = parts[1]
+//     const fullPath = parts[1]
 
-    const withoutVersion = fullPath.includes('/')
-        ? fullPath.substring(fullPath.indexOf('/') + 1)
-        : fullPath
+//     const withoutVersion = fullPath.includes('/')
+//         ? fullPath.substring(fullPath.indexOf('/') + 1)
+//         : fullPath
 
-    const publicId = withoutVersion.split('.').slice(0, -1).join('.')
+//     const publicId = withoutVersion.split('.').slice(0, -1).join('.')
 
-    return publicId
-}
+//     return publicId
+// }
 
 // const cloudinary = require('cloudinary').v2;
 
@@ -33,22 +33,22 @@ function getPublicIdFromUrl(url) {
 
 
 
-const uploadImgBuffer = (fileBuffer, folder = 'WebBeerImg') => {
-    return new Promise((resolve, reject) => {
-        const stream = cloudinary.uploader.upload_stream(
-            { folder },
-            (error, result) => {
-                if (error) { return reject(error) }
-                resolve(result.secure_url)
-            }
-        )
-        stream.end(fileBuffer)
-    })
-}
+// const uploadImgBuffer = (fileBuffer, folder = 'WebBeerImg') => {
+//     return new Promise((resolve, reject) => {
+//         const stream = cloudinary.uploader.upload_stream(
+//             { folder },
+//             (error, result) => {
+//                 if (error) { return reject(error) }
+//                 resolve(result.secure_url)
+//             }
+//         )
+//         stream.end(fileBuffer)
+//     })
+// }
 
-const uploadMultiBuffers = async (fileBuffers, folder = 'WebBeerImg') => {
-    if (!fileBuffers || fileBuffers.length === 0) return []
-    return await Promise.all(fileBuffers.map(buffer => uploadImgBuffer(buffer, folder)))
-}
+// const uploadMultiBuffers = async (fileBuffers, folder = 'WebBeerImg') => {
+//     if (!fileBuffers || fileBuffers.length === 0) return []
+//     return await Promise.all(fileBuffers.map(buffer => uploadImgBuffer(buffer, folder)))
+// }
 
-module.exports = { getPublicIdFromUrl, uploadImgBuffer, uploadMultiBuffers }
+// module.exports = { getPublicIdFromUrl, uploadImgBuffer, uploadMultiBuffers }

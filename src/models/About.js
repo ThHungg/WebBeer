@@ -10,7 +10,7 @@ const aboutSchema = new mongoose.Schema({
             link: { type: String }
         }
     },
-    description: { type: String, required: true },
+    description: { type: [String], required: true },
     carouselImages: [String],
     estDate: { type: String }
 })

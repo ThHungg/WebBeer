@@ -5,9 +5,7 @@ const productSchema = new mongoose.Schema({
     priceType: { type: String, enum: ['fixed', 'contact'] },
     price: { type: Number, required: function () { return this.priceType === 'fixed' } },
     description: { type: String, required: true },
-    // categoryId: { type: mongoose.Schema.ObjectId, ref: 'Category', required: true },
     image: [{ type: String, required: false }],
-    // category: { type: String, required: true },
     specifications: [{
         title: { type: String },
         text: { type: String }
@@ -16,3 +14,7 @@ const productSchema = new mongoose.Schema({
 
 const Product = mongoose.model("Product", productSchema)
 module.exports = Product
+
+
+// categoryId: { type: mongoose.Schema.ObjectId, ref: 'Category', required: true },
+// category: { type: String, required: true },

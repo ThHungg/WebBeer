@@ -1,7 +1,7 @@
 const productService = require('../services/productService')
-const cloudinary = require('../config/cloudinaryConfig')
-const { uploadMultiBuffers, getPublicIdFromUrl } = require('../utils/cloudinaryUtils')
-
+const fs = require("fs");
+const path = require("path");
+const Product = require('../models/Product')
 // const createProduct = async (req, res) => {
 //     try {
 //         const { name, priceType, price, description, category, specifications } = req.body
@@ -153,61 +153,152 @@ const { uploadMultiBuffers, getPublicIdFromUrl } = require('../utils/cloudinaryU
 
 const createProduct = async (req, res) => {
     try {
-        const { name, priceType, price, description, image, category, specifications } = req.body
-        if (!name || !priceType || !price || !description || !image || !category || !specifications) {
+        let { name, priceType, price, description, specifications } = req.body;
+
+        // Loại bỏ khoảng trắng đầu cuối
+        if (priceType) priceType = priceType.trim();
+        if (name) name = name.trim();
+        if (description) description = description.trim();
+
+        if (!name || !priceType || !description || !specifications) {
             return res.status(400).json({
                 status: "Err",
                 message: "Vui lòng nhập đầy đủ thông tin"
-            })
+            });
         }
-        const response = await productService.createProduct(req.body)
-        return res.status(200).json(response)
+
+        if (!req.files || req.files.length === 0) {
+            return res.status(400).json({
+                status: "Err",
+                message: "Vui lòng tải lên ít nhất một ảnh"
+            });
+        }
+
+        const images = req.files.map(file => `/uploads/${file.filename}`);
+
+        if (typeof specifications === "string") {
+            try {
+                specifications = JSON.parse(specifications);
+            } catch {
+                return res.status(400).json({
+                    status: "Err",
+                    message: "Specifications không đúng định dạng JSON"
+                });
+            }
+        }
+
+        const productData = {
+            name,
+            priceType,
+            price,
+            description,
+            specifications,
+            image: images
+        };
+
+        const response = await productService.createProduct(productData);
+
+        return res.status(200).json(response);
+
     } catch (e) {
-        res.status(404).json({
+        console.error(e);
+        return res.status(500).json({
+            status: "Err",
             message: "Lỗi hệ thống vui lòng thử lại sau!"
-        })
+        });
     }
-}
+};
 
 const updateProduct = async (req, res) => {
     try {
-        const productId = req.params.id
-        const data = req.body
+        const productId = req.params.id;
+        let { name, priceType, price, description, specifications } = req.body;
+
         if (!productId) {
-            return res.status(400).json({
-                status: "Err",
-                message: "Sản phẩm không tồn tại"
-            })
+            return res.status(400).json({ status: "Err", message: "Thiếu ID sản phẩm" });
         }
-        const response = await productService.updateProduct(productId, data)
-        return res.status(200).json(response)
+
+        if (name) name = name.trim();
+        if (priceType) priceType = priceType.trim();
+        if (description) description = description.trim();
+
+        if (typeof specifications === "string") {
+            try {
+                specifications = JSON.parse(specifications);
+            } catch {
+                return res.status(400).json({ status: "Err", message: "Specifications không đúng định dạng JSON" });
+            }
+        }
+
+
+        if (typeof description === 'string') {
+            // Nếu frontend gửi 1 đoạn duy nhất
+            description = [description];
+        } else if (!Array.isArray(description)) {
+            return res.status(400).json({ status: "Err", message: "description phải là mảng hoặc chuỗi" });
+        }
+
+        let newImages = null;
+        if (req.files && req.files.length > 0) {
+            const product = await Product.findById(productId);
+            if (product?.image?.length > 0) {
+                product.image.forEach(imgPath => {
+                    const fullPath = path.join(__dirname, "../../public", imgPath);
+                    if (fs.existsSync(fullPath)) fs.unlinkSync(fullPath);
+                });
+            }
+            newImages = req.files.map(file => `/uploads/${file.filename}`);
+        }
+
+        // Gọi service, truyền data đã chuẩn bị
+        const updateData = { name, priceType, price, description, specifications };
+        if (newImages) updateData.image = newImages;
+
+        const response = await productService.updateProduct(productId, updateData);
+
+        return res.status(response.status === "Ok" ? 200 : 400).json(response);
     } catch (e) {
-        console.log(e)
-        res.status(404).json({
-            message: "Lỗi hệ thống vui lòng thử lại sau!"
-        })
+        console.error(e);
+        return res.status(500).json({ status: "Err", message: "Lỗi hệ thống, vui lòng thử lại sau!" });
     }
-}
+};
 
 
 const deleteProduct = async (req, res) => {
     try {
-        const productId = req.params.id
+        const productId = req.params.id;
         if (!productId) {
             return res.status(400).json({
                 status: "Err",
                 message: "Không tìm thấy sản phẩm"
-            })
+            });
         }
 
-        const response = await productService.deleteProduct(productId)
-        return res.status(200).json(response)
+        const product = await Product.findById(productId);
+        if (!product) {
+            return res.status(404).json({
+                status: "Err",
+                message: "Sản phẩm không tồn tại"
+            });
+        }
+
+        // Xóa ảnh khỏi server
+        product.image.forEach(imgPath => {
+            const fullPath = path.join(__dirname, "../../public", imgPath);
+            if (fs.existsSync(fullPath)) {
+                fs.unlinkSync(fullPath);
+            }
+        });
+
+        const response = await productService.deleteProduct(productId);
+        return res.status(200).json(response);
     } catch (e) {
-        res.status(404).json({
+        console.error(e);
+        res.status(500).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
-        })
+        });
     }
-}
+};
 
 const getAllProduct = async (req, res) => {
     try {
@@ -227,6 +318,7 @@ const getRandomProduct = async (req, res) => {
         const response = await productService.getRandomProduct()
         return res.status(200).json(response)
     } catch (e) {
+        console.log(e)
         res.status(404).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
         })
@@ -257,7 +349,8 @@ module.exports = {
     deleteProduct,
     getAllProduct,
     getDetailProduct,
-    updateProduct
+    updateProduct,
+    getRandomProduct
 }
 
 
