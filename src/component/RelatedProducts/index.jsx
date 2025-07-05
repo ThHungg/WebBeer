@@ -16,8 +16,6 @@ const RelatedProduct = () => {
     queryKey: ["related"],
     queryFn: fetchGetRelated,
   });
-
-  console.log(related);
   return (
     <>
       <div className="p-7">

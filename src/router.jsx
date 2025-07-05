@@ -1,4 +1,4 @@
-// import HomePage from "./page/user/homePage";
+import HomePage from "./page/user/homePage";
 import MasterLayout from "./page/user/theme/masterLayout";
 import { Routes, Route } from "react-router-dom";
 import { ROUTERS } from "./utils/router";
@@ -11,10 +11,9 @@ import ContactPage from "./page/user/contactPage";
 import NewPage from "./page/user/newPage";
 import CartPage from "./page/user/cartPage";
 import ProfilePage from "./page/user/profilePage";
+import { CartProvider } from "./utils/cartContext";
 
-const HomePage = loadable(() => import("./page/user/homePage"), {
-  fallback: <div>Đang tải trang...</div>,
-});
+// const HomePage = loadable(() => import("./page/user/homePage"), {});
 
 const renderUserRouter = () => {
   const userRouter = [
@@ -56,15 +55,21 @@ const renderUserRouter = () => {
     },
   ];
   return (
-    <MasterLayout>
-      <Routes>
-        {userRouter.map((item, key) => {
-          return (
-            <Route key={key} path={item.path} element={item.component}></Route>
-          );
-        })}
-      </Routes>
-    </MasterLayout>
+    <CartProvider>
+      <MasterLayout>
+        <Routes>
+          {userRouter.map((item, key) => {
+            return (
+              <Route
+                key={key}
+                path={item.path}
+                element={item.component}
+              ></Route>
+            );
+          })}
+        </Routes>
+      </MasterLayout>
+    </CartProvider>
   );
 };
 

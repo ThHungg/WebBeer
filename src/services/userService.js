@@ -20,13 +20,13 @@ export const logoutUser = async () => {
 }
 
 export const registerUser = async (data) => {
-  console.log(data)
   const res = await axios.post(`${import.meta.env.VITE_API_URL}/user/createUser`, data)
   return res.data
 }
 
 export const updateUser = async (id, data) => {
   const res = await axios.put(`${import.meta.env.VITE_API_URL}/user/updateUser/${id}`, data)
+  return res.data
 }
 
 

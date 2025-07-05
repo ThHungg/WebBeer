@@ -1,6 +1,45 @@
-import { memo } from "react";
+import { memo, useState } from "react";
+import { useMutationHooks } from "../../../hooks/useMutation";
+import * as contactService from "../../../services/contactService";
+import { toast, ToastContainer } from "react-toastify";
 
 const ContactPage = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    subject: "",
+    message: "",
+  });
+
+  const mutation = useMutationHooks(
+    (data) => contactService.sendContact(data),
+    {
+      onSuccess: (data) => {
+        if (data.status === "Ok") {
+          toast.success(data.message);
+          setTimeout(() => {
+            window.location.reload();
+          }, [1000]);
+        } else {
+          toast.error(data.message);
+        }
+      },
+      onError: (error) => {
+        const errMsg =
+          error?.response?.data?.message || "Có lỗi xảy ra, vui lòng thử lại";
+        toast.error(errMsg);
+      },
+    }
+  );
+
+  const handleOnChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+  const handleSendContact = (e) => {
+    e.preventDefault();
+    mutation.mutate(formData);
+  };
   return (
     <>
       <div className="grid grid-cols-12 mt-[40px]">
@@ -25,7 +64,7 @@ const ContactPage = () => {
         </div>
 
         {/* Form liên hệ */}
-        <div className="col-span-12 mt-10">
+        <div className="col-span-12">
           <div className="w-11/12 mx-auto grid grid-cols-1 md:grid-cols-2 gap-10">
             {/* Form */}
             <div className="flex flex-col gap-6">
@@ -37,15 +76,21 @@ const ContactPage = () => {
                 qua biểu mẫu này. Chúng tôi sẽ phản hồi bạn trong thời gian sớm
                 nhất.
               </p>
-              <form className="flex flex-col gap-5">
+              <form
+                onSubmit={handleSendContact}
+                className="flex flex-col gap-5"
+              >
                 <div className="flex flex-col">
                   <label className="text-[#302006] font-medium mb-1">
                     Họ và tên
                   </label>
                   <input
+                    name="name"
                     type="text"
                     placeholder="Nhập họ và tên"
                     className="border border-[#ccc] px-4 py-3 rounded outline-none focus:ring-2 focus:ring-[#302006]"
+                    value={formData.name}
+                    onChange={handleOnChange}
                     required
                   />
                 </div>
@@ -55,9 +100,12 @@ const ContactPage = () => {
                     Email
                   </label>
                   <input
+                    name="email"
                     type="email"
                     placeholder="Nhập email"
                     className="border border-[#ccc] px-4 py-3 rounded outline-none focus:ring-2 focus:ring-[#302006]"
+                    value={formData.email}
+                    onChange={handleOnChange}
                     required
                   />
                 </div>
@@ -67,9 +115,12 @@ const ContactPage = () => {
                     Số điện thoại
                   </label>
                   <input
+                    name="phone"
                     type="tel"
                     placeholder="Nhập số điện thoại"
                     className="border border-[#ccc] px-4 py-3 rounded outline-none focus:ring-2 focus:ring-[#302006]"
+                    value={formData.phone}
+                    onChange={handleOnChange}
                   />
                 </div>
 
@@ -78,7 +129,10 @@ const ContactPage = () => {
                     Tiêu đề yêu cầu
                   </label>
                   <select
+                    name="subject"
                     className="border border-[#ccc] px-4 py-3 rounded outline-none focus:ring-2 focus:ring-[#302006]"
+                    value={formData.subject}
+                    onChange={handleOnChange}
                     required
                   >
                     <option value="">-- Chọn tiêu đề yêu cầu --</option>
@@ -98,9 +152,12 @@ const ContactPage = () => {
                     Nội dung tin nhắn
                   </label>
                   <textarea
+                    name="message"
                     rows={5}
                     placeholder="Nhập nội dung tin nhắn"
                     className="border border-[#ccc] px-4 py-3 rounded outline-none focus:ring-2 focus:ring-[#302006]"
+                    value={formData.message}
+                    onChange={handleOnChange}
                     required
                   ></textarea>
                 </div>
@@ -124,6 +181,7 @@ const ContactPage = () => {
             </div>
           </div>
         </div>
+        <ToastContainer position="top-right" autoClose={3000} />
       </div>
     </>
   );

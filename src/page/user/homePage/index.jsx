@@ -1,5 +1,7 @@
-import { memo } from "react";
+import { memo, useEffect } from "react";
 import "./indedx.css";
+import AOS from "aos";
+import "aos/dist/aos.css";
 import * as homeService from "../../../services/viewPage/homePageService";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -13,6 +15,9 @@ import "swiper/css/effect-creative";
 import { EffectCreative } from "swiper/modules";
 const HomePage = () => {
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+  useEffect(() => {
+    AOS.init({ duration: 2000, once: true });
+  }, []);
 
   const fetchAllData = async () => {
     const res = await homeService.getHomePage();
@@ -28,10 +33,10 @@ const HomePage = () => {
     queryFn: fetchAllData,
   });
 
-  if (isLoading) return <div>Loading...</div>;
-  if (isError || !homes) return <div>Đã có lỗi hoặc không có dữ liệu</div>;
+  // if (isLoading) return <div>Loading...</div>;
+  // if (isError || !homes) return <div>Đã có lỗi hoặc không có dữ liệu</div>;
 
-  const homeData = homes.data;
+  const homeData = homes?.data;
 
   const getFullImageUrl = (path) => {
     if (!path) return "";
@@ -41,7 +46,7 @@ const HomePage = () => {
 
   const settings = {
     dots: true,
-    infinite: homeData.carouselImages.length > 1, // chỉ infinite khi có >1 ảnh
+    infinite: homeData?.carouselImages.length > 1,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
@@ -49,30 +54,32 @@ const HomePage = () => {
 
   return (
     <>
-      <div className="grid grid-cols-12 mt-[40px]">
+      <div className="grid grid-cols-12">
         {/* Banner */}
         <div className="col-span-12">
           <div className="w-11/12 mx-auto">
             <img
-              src={getFullImageUrl(homeData.banner?.image)}
+              src={getFullImageUrl(homeData?.banner?.image)}
+              data-aos="fade-up"
+              data-aos-anchor-placement="top-bottom"
               alt=""
               className="w-full h-[370px] md:max-h-[460px] rounded-br-[300px] object-cover rounded-xl"
             />
             <div className="bg-[#FBF8F4] w-full md:w-[720px] md:ml-12 rounded-xs mx-auto px-6 md:px-[40px] py-6 md:py-[40px] mt-0 md:-mt-[140px] relative z-10">
               <h2 className="text-[#302006] mb-[30px] text-[32px] leading-[130%] font-bold font-trend">
-                {homeData.banner?.title}
+                {homeData?.banner?.title}
               </h2>
               <p className="mt-5 text-left w-full max-w-[1000px] text-[#272625] text-[16px] leading-[24px] mb-[36px] font-avant">
-                {homeData.banner?.description}
+                {homeData?.banner?.description}
               </p>
             </div>
           </div>
         </div>
 
         {/* Dynamic Sections */}
-        {homeData.sections && homeData.sections.length > 0 && (
+        {homeData?.sections && homeData?.sections.length > 0 && (
           <div className="col-span-12 md:col-span-10 md:col-start-2 mt-5">
-            {homeData.sections.map((section, index) => {
+            {homeData?.sections.map((section, index) => {
               const isImageLeft = section.imagePosition === "left";
 
               return (
@@ -86,6 +93,7 @@ const HomePage = () => {
                         <img
                           src={getFullImageUrl(section.imageUrl)}
                           alt={section.title}
+                          data-aos="fade-down"
                           className="w-full pl-0 md:pl-12 h-[600px] md:h-[680px] object-cover rounded-tl-[300px] rounded-xs"
                         />
                       </div>
@@ -116,6 +124,7 @@ const HomePage = () => {
                         <img
                           src={getFullImageUrl(section.imageUrl)}
                           alt={section.title}
+                          data-aos="fade-down"
                           className="w-full pl-0 md:pr-12 lg:h-[680px] h-[600px] object-cover rounded-tr-[300px] rounded-xs"
                         />
                       </div>
@@ -151,7 +160,7 @@ const HomePage = () => {
         <div className="col-span-10 col-start-2">
           <Swiper
             grabCursor={true}
-            loop={true} 
+            loop={true}
             effect={"creative"}
             creativeEffect={{
               prev: {
@@ -165,7 +174,7 @@ const HomePage = () => {
             modules={[EffectCreative]}
             className="mySwiper"
           >
-            {homeData.carouselImages.map((image, key) => (
+            {homeData?.carouselImages?.map((image, key) => (
               <SwiperSlide key={key}>
                 <div className="w-full overflow-hidden rounded-xl">
                   <img

@@ -56,7 +56,6 @@ const LoginForm = () => {
       const message =
         error?.response?.data?.message || "Lỗi hệ thống, vui lòng thử lại sau";
       toast.error(message);
-      console.error(error);
     },
   });
 

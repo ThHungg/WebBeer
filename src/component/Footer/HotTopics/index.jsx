@@ -1,7 +1,7 @@
 import { memo } from "react";
-import NewsCard from "../../../component/NewsCard";
+import NewsCard from "../../NewsCard";
 
-const NewPage = () => {
+const HotTopics = () => {
   const newsData = [
     {
       id: 1,
@@ -31,19 +31,13 @@ const NewPage = () => {
       date: "20/06/2025",
     },
   ];
-
   return (
     <>
-      <div className="bg-[#F6F6F6] py-10 px-6 text-left">
-        <h2 className="uppercase text-[#302006] font-semibold text-lg md:text-xl">
-          Our Wines
-        </h2>
-        <p className="text-[#302006] mb-6 font-normal mt-5 text-sm md:text-base max-w-xl">
-          Explore our wine store and discover your favourite drops of Fowles
-          wine!
-        </p>
-      </div>
-      <div className="max-w-screen-xl mx-auto px-4">
+      <div className="mx-10">
+        <div className="flex justify-between">
+          <h1>Đây là tin tức nổi bật</h1>
+          <button>Đọc thêm</button>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {newsData.map((item) => (
             <NewsCard
@@ -60,4 +54,4 @@ const NewPage = () => {
   );
 };
 
-export default memo(NewPage);
+export default memo(HotTopics);

@@ -21,14 +21,13 @@ const AboutPage = () => {
     queryKey: ["about"],
     queryFn: fetchAbout,
   });
-  console.log(abouts);
 
   if (!abouts?.data || abouts.data.length === 0) {
     return <div className="text-center py-10">Đang tải dữ liệu...</div>;
   }
   return (
     <>
-      <div className="grid grid-cols-12 mt-[40px]">
+      <div className="grid grid-cols-12">
         <div className="col-span-12">
           <div className="w-11/12 mx-auto">
             <img

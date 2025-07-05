@@ -1,31 +1,30 @@
-import { memo, useRef } from "react";
+import { memo, useState, useEffect } from "react";
 import ProductCart from "../../../component/ProductCard";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { Autoplay, Pagination, Navigation } from "swiper/modules";
+import { Autoplay } from "swiper/modules";
 import * as productService from "../../../services/productService";
-
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
 import { useQuery } from "@tanstack/react-query";
-import { ROUTERS } from "../../../utils/router";
-import { Link } from "react-router-dom";
-const ProductPage = () => {
-  const sliderRef = useRef(null);
 
-  const settings = {
-    infinite: true,
-    speed: 1000,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    autoplay: true,
-    autoplaySpeed: 0, // delay nhỏ hơn 0
-    cssEase: "linear",
-    arrows: false,
-    pauseOnHover: false, // tắt cơ chế pause mặc định
-    swipeToSlide: true,
-    draggable: true,
-  };
+const ProductPage = () => {
+  const [slidesPerView, setSlidesPerView] = useState(4);
+
+  // Lắng nghe thay đổi kích thước window để cập nhật slidesPerView
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      if (width < 464) setSlidesPerView(1);
+      else if (width < 1024) setSlidesPerView(2);
+      else setSlidesPerView(4);
+    };
+
+    handleResize(); // gọi lần đầu
+    window.addEventListener("resize", handleResize);
+
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
 
   const fetchAllProduct = async () => {
     const response = await productService.getAllProduct();
@@ -36,9 +35,12 @@ const ProductPage = () => {
     queryKey: ["product"],
     queryFn: fetchAllProduct,
   });
-  console.log(products);
 
-  const productss = products?.data;
+  const productss = products?.data || [];
+
+  // Loop chỉ bật khi số sản phẩm nhiều hơn slidesPerView
+  const canLoop = productss.length > slidesPerView;
+
   return (
     <>
       <div className="bg-[#F6F6F6] py-10 px-10 text-left">
@@ -52,8 +54,8 @@ const ProductPage = () => {
         <Swiper
           modules={[Autoplay]}
           spaceBetween={0}
-          slidesPerView={4}
-          loop={true}
+          slidesPerView={slidesPerView}
+          loop={canLoop}
           autoplay={{
             delay: 0,
             disableOnInteraction: false,
@@ -67,8 +69,8 @@ const ProductPage = () => {
             1024: { slidesPerView: 4 },
           }}
         >
-          {productss?.map((item, index) => (
-            <SwiperSlide key={index}>
+          {productss.map((item) => (
+            <SwiperSlide key={item._id}>
               <ProductCart
                 id={item._id}
                 name={item.name}

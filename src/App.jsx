@@ -7,6 +7,7 @@ import { jwtDecode } from "jwt-decode";
 import * as userServices from "./services/userService";
 import { useDispatch } from "react-redux";
 import { updateUser } from "./redux/slices/userSlice";
+import { ToastContainer } from "react-toastify";
 
 function App() {
   const dispatch = useDispatch();
@@ -47,9 +48,12 @@ function App() {
     }
   }, []);
   return (
-    <BrowserRouter>
-      <RouterCustom />
-    </BrowserRouter>
+    <>
+      <BrowserRouter>
+        <RouterCustom />
+      </BrowserRouter>
+      <ToastContainer position="top-right" autoClose={3000} />
+    </>
   );
 }
 

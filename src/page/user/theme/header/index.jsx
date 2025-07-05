@@ -31,10 +31,9 @@ const Header = ({ isCartOpen, setIsCartOpen }) => {
   ];
 
   const role = getUserRole();
-  console.log(role);
   return (
     <>
-      <div className="sm:px-10 md:px-16 lg:px-16 xl:px-18 pt-3 bg-white">
+      <div className="sm:px-10 md:px-16 lg:px-16 xl:px-18 px-5 mb-3 bg-white">
         <div className="relative flex justify-center lg:justify-between items-center">
           <button
             onClick={() => setIsOpen(!isOpen)}
@@ -64,7 +63,7 @@ const Header = ({ isCartOpen, setIsCartOpen }) => {
           </div>
           <ul className="hidden lg:flex gap-10 items-center">
             {menus.map((menu, idx) => (
-              <Link to={menu.path}>
+              <Link to={menu.path} key={idx}>
                 <li>{menu.name}</li>
               </Link>
             ))}
