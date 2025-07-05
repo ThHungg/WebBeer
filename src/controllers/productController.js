@@ -201,7 +201,6 @@ const createProduct = async (req, res) => {
         return res.status(200).json(response);
 
     } catch (e) {
-        console.error(e);
         return res.status(500).json({
             status: "Err",
             message: "Lỗi hệ thống vui lòng thử lại sau!"
@@ -258,7 +257,6 @@ const updateProduct = async (req, res) => {
 
         return res.status(response.status === "Ok" ? 200 : 400).json(response);
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ status: "Err", message: "Lỗi hệ thống, vui lòng thử lại sau!" });
     }
 };
@@ -293,7 +291,6 @@ const deleteProduct = async (req, res) => {
         const response = await productService.deleteProduct(productId);
         return res.status(200).json(response);
     } catch (e) {
-        console.error(e);
         res.status(500).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
         });
@@ -318,7 +315,6 @@ const getRandomProduct = async (req, res) => {
         const response = await productService.getRandomProduct()
         return res.status(200).json(response)
     } catch (e) {
-        console.log(e)
         res.status(404).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
         })
@@ -334,7 +330,6 @@ const getDetailProduct = async (req, res) => {
                 message: "Không tìm thấy sản phẩm"
             })
         }
-        console.log(productId)
         const response = await productService.getDetailProduct(productId)
         return res.status(200).json(response)
     } catch (e) {

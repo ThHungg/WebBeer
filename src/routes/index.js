@@ -5,6 +5,8 @@ const imageRouter = require('./imageRouter')
 const aboutRouter = require('./viewsRouter/aboutRouter')
 const navigateRouter = require('./viewsRouter/navigateRouter')
 const cartRouter = require('./cartRouter')
+const contactRouter = require('./contactRouter')
+const newsRouter = require('./newsRouter')
 // const categoryRouter = require('./categoryRouter')
 
 const routes = (app) => {
@@ -12,6 +14,8 @@ const routes = (app) => {
     app.use('/api/product', productRouter)
     app.use('/api/img', imageRouter)
     app.use('/api/cart', cartRouter)
+    app.use('/api/contact', contactRouter)
+    app.use('/api/news', newsRouter)
     // app.use('/api/category', categoryRouter)
 
     //View

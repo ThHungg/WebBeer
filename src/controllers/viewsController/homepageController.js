@@ -147,7 +147,6 @@ const createHomePage = async (req, res) => {
         return res.status(200).json(response);
 
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ message: "Lỗi hệ thống, vui lòng thử lại sau!" });
     }
 };
@@ -233,7 +232,6 @@ const updateHomePage = async (req, res) => {
         return res.status(200).json(response);
 
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ message: "Lỗi hệ thống, vui lòng thử lại sau!" });
     }
 };
@@ -266,7 +264,6 @@ const deleteHomePage = async (req, res) => {
         const response = await homePageService.deleteHomePage(current._id);
         return res.status(200).json(response);
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ message: "Lỗi hệ thống" });
     }
 };

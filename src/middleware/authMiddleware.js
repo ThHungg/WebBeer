@@ -42,7 +42,6 @@ const authMiddleware = (req, res, next) => {
         req.user = decoded; // gán thông tin user decoded cho request
         next();
     } catch (error) {
-        console.error("authMiddleware error:", error);
         return res.status(401).json({ status: "Err", message: "Token không hợp lệ hoặc hết hạn" });
     }
 };

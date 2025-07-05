@@ -43,7 +43,6 @@ const createUser = async (req, res) => {
         const response = await userService.createUser(req.body)
         return res.status(200).json(response)
     } catch (e) {
-        console.log(e)
         return res.status(404).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
         })
@@ -69,7 +68,6 @@ const loginUser = async (req, res) => {
         })
         return res.status(200).json(newResponse)
     } catch (e) {
-        console.log(e)
         return res.status(404).json({
             message: "Lỗi hệ thống vui lòng thử lại sau!"
         })
@@ -180,7 +178,6 @@ const sendOtp = async (req, res) => {
         const response = await userService.sendOtp(email);
         return res.status(200).json(response);
     } catch (e) {
-        console.log(e)
         return res.status(404).json({
             message: 'Lỗi hệ thống, vui lòng thử lại sau!'
         });

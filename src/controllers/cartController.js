@@ -10,22 +10,6 @@ const createCart = async (req, res) => {
                 message: "Vui lòng nhập đầy đủ thông tin"
             });
         }
-
-        // for (const item of products) {
-        //     if (typeof item.quantity !== 'number' || item.quantity <= 0) {
-        //         return res.status(400).json({
-        //             status: "Err",
-        //             message: "Số lượng phải lớn hơn 0 và là số hợp lệ"
-        //         });
-        //     }
-        //     if (!item.productId || !item.price) {
-        //         return res.status(400).json({
-        //             status: "Err",
-        //             message: "Mỗi sản phẩm phải có productId và price"
-        //         });
-        //     }
-        // }
-
         const response = await cartService.createCart({ userId, products });
         return res.status(200).json(response);
     } catch (e) {
@@ -58,11 +42,11 @@ const getCart = async (req, res) => {
 
 const removeItem = async (req, res) => {
     try {
-        const { userId, productId } = req.body
-        if (!userId || !productId) {
+        const { id, productId } = req.body
+        if (!id || !productId) {
             return res.status(400).json({
                 status: "Err",
-                message: "Không nhận được userId và productId"
+                message: "Không nhận được id và productId"
             })
         }
         const response = await cartService.removeItem(req.body)
@@ -77,9 +61,9 @@ const removeItem = async (req, res) => {
 
 const updateCart = async (req, res) => {
     try {
-        const { userId, productId, quantity } = req.body;
+        const { id, productId, quantity } = req.body;
 
-        if (!userId || !productId) {
+        if (!id || !productId) {
             return res.status(400).json({
                 status: "Err",
                 message: "Vui lòng cung cấp đầy đủ userId, productId và quantity hợp lệ (>=0)"
@@ -92,7 +76,7 @@ const updateCart = async (req, res) => {
             });
         }
 
-        const response = await cartService.updateCart({ userId, productId, quantity });
+        const response = await cartService.updateCart({ id, productId, quantity });
         return res.status(200).json(response);
     } catch (e) {
         return res.status(404).json({

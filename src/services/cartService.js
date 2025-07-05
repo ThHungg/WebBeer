@@ -32,7 +32,7 @@ const createCart = async ({ userId, products }) => {
         await cart.save();
 
         return {
-            status: "OK",
+            status: "Ok",
             message: "Thêm vào giỏ hàng thành công",
             data: cart
         };
@@ -58,9 +58,9 @@ const getCart = (userId) => {
 
 const removeItem = (cartInfo) => {
     return new Promise(async (resolve, reject) => {
-        const { userId, productId } = cartInfo
+        const { id, productId } = cartInfo
         try {
-            const cart = await Cart.findOne({ userId });
+            const cart = await Cart.findOne({ userId: id });
             if (!cart) {
                 return reject({
                     status: 'Err',
@@ -80,8 +80,8 @@ const removeItem = (cartInfo) => {
 
             await cart.save();
             resolve({
-                status: "OK",
-                message: "Xóa sản phẩm",
+                status: "Ok",
+                message: "Xóa sản phẩm thành công",
                 data: cart
             })
         } catch (e) {
@@ -90,10 +90,10 @@ const removeItem = (cartInfo) => {
     })
 }
 
-const updateCart = ({ userId, productId, quantity }) => {
+const updateCart = ({ id, productId, quantity }) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const cart = await Cart.findOne({ userId });
+            const cart = await Cart.findOne({ userId: id });
             if (!cart) {
                 return resolve({
                     status: "Err",
@@ -120,7 +120,7 @@ const updateCart = ({ userId, productId, quantity }) => {
             await cart.save();
 
             return resolve({
-                status: "OK",
+                status: "Ok",
                 message: "Cập nhật giỏ hàng thành công",
                 data: cart
             })

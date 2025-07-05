@@ -64,7 +64,6 @@ const updateProduct = (productId, data) => {
 const updateProductImage = async (productId, imageUrls) => {
     try {
         await Product.findByIdAndUpdate(productId, { image: imageUrls })
-        console.log('Cập nhật ảnh thành công!');
     } catch (e) {
         throw e
     }

@@ -5,7 +5,7 @@ const aboutSchema = new mongoose.Schema({
         image: { type: String },
         title: { type: String, required: true },
         description: { type: String },
-        button: {
+        button: {   
             text: { type: String },
             link: { type: String }
         }

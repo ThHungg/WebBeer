@@ -50,7 +50,6 @@ const createAbout = async (req, res) => {
 
         return res.status(200).json(response);
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ message: 'Lỗi hệ thống, vui lòng thử lại sau!' });
     }
 };
@@ -118,7 +117,6 @@ const updateAbout = async (req, res) => {
         return res.status(200).json(response);
 
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ message: "Lỗi hệ thống, vui lòng thử lại sau!" });
     }
 };
@@ -157,7 +155,6 @@ const deleteAbout = async (req, res) => {
         return res.status(200).json(response);
 
     } catch (e) {
-        console.error(e);
         return res.status(500).json({ message: "Lỗi hệ thống, vui lòng thử lại sau!" });
     }
 };
